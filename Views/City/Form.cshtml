@@ -1,0 +1,217 @@
+﻿@model CoffeeShopManagementSystem.Models.CityModel;
+
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Home">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Product" asp-area="Product">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-boxes"></i>
+                <span>Product Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Customer" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-person-vcard"></i>
+                <span>Customer Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Order" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-cart3"></i>
+                <span>Order Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="OrderDetail" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-card-list"></i>
+                <span>OrderDetail Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Bills" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-receipt-cutoff"></i>
+                <span>Bills Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="User" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>User Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " asp-action="Index" asp-controller="City" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>City Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="State" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>State Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Country" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>Country Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Logout" asp-controller="Login" asp-area="">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+
+    </ul>
+
+</aside><!-- End Sidebar-->
+
+<main class="main" id="main">
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="d-flex justify-content-center py-4">
+                            <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                <img src="~/img/logo.png" alt="">
+                                <span class="d-none d-lg-block">CoffeeHouse</span>
+                            </a>
+                        </div><!-- End Logo -->
+
+                        <div class="card mb-3" style="width:150%">
+
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">City Form</h5>
+                                    <h6 class=" text-center pb-0 fs-4">@ViewBag.AddOrEdit City</h6>
+                                </div>
+
+                                <form asp-action="CitySave" asp-controller="City" method="post" class="row g-3 needs-validation" novalidate>
+                                    @Html.HiddenFor(x => x.CityID)
+
+                                    <div class="col-12">
+                                        <label for="CountryID" class="form-label"><span class="text-danger">*</span>Country Name</label>
+                                        <select id="CountryID" name="CountryID" class="form-control" asp-for="CountryID">
+                                            <option value="">Select Country</option>
+                                            @foreach (var country in ViewBag.CountryList)
+                                            {
+                                                <option value="@country.CountryID">@country.CountryName</option>
+                                            }
+                                        </select>
+                                        @* <select asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList, "CountryID", "CountryName"))" class="form-control" placeholder="Enter Country Name"></select>
+                                        <span asp-validation-for="CountryID" class="text-danger"></span>
+                                        @* <div class="invalid-feedback">Please, enter your order id!</div> *@
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="StateID" class="form-label"><span class="text-danger">*</span>State Name</label>
+                                        @* <select id="StateID" name="StateID" class="form-control" asp-for="StateID">
+                                            <option value="">Select State</option>
+                                            @if(ViewBag.StateList != null)
+                                            {
+                                                @foreach (var state in ViewBag.StateList)
+                                                {
+                                                    if(state.StateID == Model.StateID)
+                                                    {
+                                                        <option value="@state.StateID">@state.StateName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@state.StateID">@state.StateName</option>
+                                                    }                                                    
+                                                }
+                                            }                                            
+                                        </select> *@
+                                        <select asp-for="StateID" class="form-control">
+                                            <option value="">Select State</option>
+                                            @if (ViewBag.StateList != null)
+                                            {
+                                                foreach (var state in ViewBag.StateList)
+                                                {
+                                                    <option value="@state.StateID">
+                                                        @state.StateName
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                        <span asp-validation-for="StateID" class="text-danger"></span>
+                                        @* <div class="invalid-feedback">Please, enter your order id!</div> *@
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="CityName" class="form-label"><span class="text-danger">*</span>City Name</label>
+                                        <input asp-for="CityName" type="text" class="form-control" required>
+                                        <span asp-validation-for="CityName" class="text-danger"></span>
+                                        @* <div class="invalid-feedback">Please, enter your bill number!</div> *@
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="CityCode" class="form-label"><span class="text-danger">*</span>City Code</label>
+                                        <input asp-for="CityCode" type="text" class="form-control" required>
+                                        <span asp-validation-for="CityCode" class="text-danger"></span>
+                                        @* <div class="invalid-feedback">Please, enter your bill number!</div> *@
+                                    </div>
+
+                                    <div class="col-12 d-flex" style="margin:40px auto 10px auto">
+                                        <button class="btn btn-primary w-100" type="submit">Submit</button>
+                                        <a asp-action="Index" asp-controller="City" asp-area="" class="btn w-100">Cancel</a>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $('#CountryID').change(function () {
+        $.post('@Url.Action("GetStatesByCountry")', { CountryID: $(this).val() }, function (data) {
+            $('#StateID').empty().append('<option>Select State</option>');
+            //console.log(data);
+            $.each(data, function (i, state) {
+                $('#StateID').append(`<option value="${state.stateID}">${state.stateName}</option>`);
+            });
+        });
+    });
+</script>
+
+<script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</script>

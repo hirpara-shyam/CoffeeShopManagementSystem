@@ -1,0 +1,192 @@
+﻿@model CoffeeShopManagementSystem.Models.OrderDetailModel;
+
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Home">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Product" asp-area="Product">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-boxes"></i>
+                <span>Product Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Customer" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-person-vcard"></i>
+                <span>Customer Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Order" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-cart3"></i>
+                <span>Order Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " asp-action="Index" asp-controller="OrderDetail" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-card-list"></i>
+                <span>OrderDetail Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Bills" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-receipt-cutoff"></i>
+                <span>Bills Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="User" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>User Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="City" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>City Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="State" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>State Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Country" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>Country Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Logout" asp-controller="Login" asp-area="">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+
+    </ul>
+
+</aside><!-- End Sidebar-->
+
+<main class="main" id="main">
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="d-flex justify-content-center py-4">
+                            <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                <img src="~/img/logo.png" alt="">
+                                <span class="d-none d-lg-block">CoffeeHouse</span>
+                            </a>
+                        </div><!-- End Logo -->
+
+                        <div class="card mb-3" style="width:150%">
+
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Order Details Form</h5>
+                                    <h6 class=" text-center pb-0 fs-4">@ViewBag.AddOrEdit Order Details</h6>
+                                </div>
+
+                                <form asp-action="OrderDetailSave" asp-controller="OrderDetail" method="post" class="row g-3 needs-validation" novalidate>
+                                    @Html.HiddenFor(x => x.OrderDetailID)
+                                    <div class="col-12">
+                                        <label for="projectName" class="form-label"><span class="text-danger">*</span>Order ID</label>
+                                        <select class="form-control" asp-for="OrderID">
+                                            <option value="">Select OrderID</option>
+                                            @foreach (var order in ViewBag.OrderList)
+                                            {
+                                                <option value="@order.OrderID">@order.OrderID</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="OrderID" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="endDate" class="form-label"><span class="text-danger">*</span>Product ID</label>
+                                        <select class="form-control" asp-for="ProductID">
+                                            <option value="">Select Product</option>
+                                            @foreach (var product in ViewBag.ProductList)
+                                            {
+                                                <option value="@product.ProductID">@product.ProductName</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="ProductID" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="budget" class="form-label"><span class="text-danger">*</span>Quantity</label>
+                                        <input asp-for="Quantity" type="number" class="form-control" required>
+                                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="budget" class="form-label"><span class="text-danger">*</span>Amount</label>
+                                        <input asp-for="Amount" type="text" class="form-control" required>
+                                        <span asp-validation-for="Amount" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="budget" class="form-label"><span class="text-danger">*</span>Total Amount</label>
+                                        <input asp-for="TotalAmount" type="text" class="form-control" required>
+                                        <span asp-validation-for="TotalAmount" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="budget" class="form-label"><span class="text-danger">*</span>User ID</label>
+                                        <select class="form-control" asp-for="UserID">
+                                            <option value="">Select User</option>
+                                            @foreach (var user in ViewBag.UserList)
+                                            {
+                                                <option value="@user.UserID">@user.UserName</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="UserID" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-12 d-flex" style="margin:40px auto 10px auto">
+                                        <button class="btn btn-primary w-100" type="submit">Submit</button>
+                                        <a asp-action="Index" asp-controller="OrderDetail" asp-area="" class="btn w-100">Cancel</a>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+
+<script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</script>

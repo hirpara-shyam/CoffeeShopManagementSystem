@@ -1,0 +1,158 @@
+﻿@using System.Data;
+
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Home">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Product" asp-area="Product">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-boxes"></i>
+                <span>Product Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Customer" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-person-vcard"></i>
+                <span>Customer Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " asp-action="Index" asp-controller="Order" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-cart3"></i>
+                <span>Order Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="OrderDetail" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-card-list"></i>
+                <span>OrderDetail Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Bills" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-receipt-cutoff"></i>
+                <span>Bills Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="User" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>User Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="City" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>City Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="State" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>State Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Index" asp-controller="Country" asp-area="">
+                @* <i class="bi bi-circle"></i> *@
+                <i class="bi bi-people"></i>
+                <span>Country Table</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" asp-action="Logout" asp-controller="Login" asp-area="">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+
+    </ul>
+
+</aside><!-- End Sidebar-->
+
+
+<main class="main" id="main">
+    <div class="Container">
+        <div class="mb-sm-3"><h2>Order Table</h2></div>
+        <div class="text-danger">@TempData["ErrorMessage"]</div>
+        <div class="d-flex mb-md-1">
+            <a asp-action="Form" asp-controller="Order"><input type="button" class="btn btn-outline-info m-1" value="Add Order"></a>
+            <a asp-action="ExportToExcel" asp-controller="Order" asp-area=""><input type="button" class="btn btn-outline-info m-1" value="Export to Excel"></a>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="orderSearch" placeholder="Search Any">
+        </div>
+        <table class="table">
+            <tr>
+                @* <th>Order ID</th> *@
+                <th>Order Date</th>
+                <th>Customer Name</th>
+                <th>Payment Mode</th>
+                <th>Total Amount</th>
+                <th>Shipping Address</th>
+                <th>User Name</th>
+                <th>Action</th>
+            </tr>
+
+            @foreach (var data in Model)
+            {
+                <tr>
+                    @* <td>@data.OrderID</td> *@
+                    <td>@data.OrderDate</td>
+                    @* <td>@data.CustomerID</td> *@
+                    <td>@data.CustomerName</td>
+                    <td>@data.PaymentMode</td>
+                    <td>@data.TotalAmount</td>
+                    <td>@data.ShippingAddress</td>
+                    @* <td>@data.UserID</td> *@
+                    <td>@data.UserName</td>
+                    <td class="d-flex">
+                        @* <button class="bg-warning"><i class="bi bi-pencil-fill"></i></button> *@
+                        <form method="post" asp-controller="Order" asp-action="Form">
+                            <input type="hidden" name="OrderID" value="@data.OrderID" />
+                            <button class="bg-warning" type="submit">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </form>
+
+                        @* <button class="bg-danger"><i class="bi bi-trash-fill"></i></button> *@
+                        <form method="post" asp-controller="Order" asp-action="OrderDelete" onsubmit="return confirm('Are you sure you want to delete this order?');">
+                            <input type="hidden" name="OrderID" value="@data.OrderID" />
+                            <button class="bg-danger" type="submit">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#orderSearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#orderTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+}
