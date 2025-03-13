@@ -1,7 +1,10 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using CoffeeShopManagementSystem.Middleware;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddLogging();
 
 //Login Services
 builder.Services.AddDistributedMemoryCache();
@@ -12,11 +15,23 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Global Exception Handling Middleware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+// Default Middleware Configuration
+if (!app.Environment.IsDevelopment())
+{
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+/*// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-}
+}*/
+
 app.UseStaticFiles();
 
 app.UseRouting();

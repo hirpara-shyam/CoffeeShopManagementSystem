@@ -29,22 +29,6 @@ namespace CoffeeShopManagementSystem.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            /*string connectionstr = this._configuration.GetConnectionString("ConnectionString");
-            //PrePare a connection
-            DataTable dt = new DataTable();
-            SqlConnection conn = new SqlConnection(connectionstr);
-            conn.Open();
-
-            //Prepare a Command
-            SqlCommand objCmd = conn.CreateCommand();
-            objCmd.CommandType = CommandType.StoredProcedure;
-            objCmd.CommandText = "PR_LOC_Country_SelectAll";
-
-            SqlDataReader objSDR = objCmd.ExecuteReader();
-            dt.Load(objSDR);
-            conn.Close();
-            return View("Index", dt);*/
-
             List<CountryModel> countries = new List<CountryModel>();
             HttpResponseMessage response = _httpClient.GetAsync($"{_httpClient.BaseAddress}/Country/GetAllCountries").Result;
             if (response.IsSuccessStatusCode)
@@ -79,30 +63,10 @@ namespace CoffeeShopManagementSystem.Controllers
                 }
             }
             return View(new CountryModel());
-
-            /*string connectionString = _configuration.GetConnectionString("ConnectionString");
-            SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
-            SqlCommand command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "PR_LOC_Country_SelectByPK";
-            command.Parameters.AddWithValue("@CountryID", CountryID);
-            SqlDataReader reader = command.ExecuteReader();
-            DataTable table = new DataTable();
-            table.Load(reader);
-            CountryModel countryModel = new CountryModel();
-
-            foreach (DataRow dataRow in table.Rows)
-            {
-                countryModel.CountryID = Convert.ToInt32(@dataRow["CountryID"]);
-                countryModel.CountryName = @dataRow["CountryName"].ToString();
-                countryModel.CountryCode = @dataRow["CountryCode"].ToString();
-            }
-            return View("Form", countryModel);*/
         }
         #endregion
 
-        #region StateSave
+        #region CountrySave
         [HttpPost]
         public async Task<IActionResult> CountrySave(CountryModel countryModel)
         {
@@ -127,32 +91,7 @@ namespace CoffeeShopManagementSystem.Controllers
                     return RedirectToAction("Index");
                 }
             }
-
             return View("Form", countryModel);
-
-            /*if (ModelState.IsValid)
-            {
-                string connectionString = this._configuration.GetConnectionString("ConnectionString");
-                SqlConnection connection = new SqlConnection(connectionString);
-                connection.Open();
-                SqlCommand command = connection.CreateCommand();
-                command.CommandType = CommandType.StoredProcedure;
-                if (countryModel.CountryID == 0)
-                {
-                    command.CommandText = "PR_LOC_Country_Insert";
-                }
-                else
-                {
-                    command.CommandText = "PR_LOC_Country_Update";
-                    command.Parameters.Add("@CountryID", SqlDbType.Int).Value = countryModel.CountryID;
-                }
-                command.Parameters.Add("@CountryName", SqlDbType.VarChar).Value = countryModel.CountryName;
-                command.Parameters.Add("@CountryCode", SqlDbType.VarChar).Value = countryModel.CountryCode;
-                command.ExecuteNonQuery();
-                return RedirectToAction("Index");
-            }
-
-            return View("Form", countryModel);*/
         }
         #endregion
 
@@ -160,26 +99,91 @@ namespace CoffeeShopManagementSystem.Controllers
         [HttpGet]
         public IActionResult Delete(int CountryID)
         {
-            /*string connectionstr = _configuration.GetConnectionString("ConnectionString");
-            using (SqlConnection conn = new SqlConnection(connectionstr))
-            {
-                conn.Open();
-                using (SqlCommand sqlCommand = conn.CreateCommand())
-                {
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    sqlCommand.CommandText = "PR_LOC_Country_Delete";
-                    sqlCommand.Parameters.AddWithValue("@CountryID", CountryID);
-                    sqlCommand.ExecuteNonQuery();
-                }
-            }
-            return RedirectToAction("Index");*/
-
             HttpResponseMessage response = _httpClient.DeleteAsync($"{_httpClient.BaseAddress}/Country/DeleteCountry/{CountryID}").Result;
             if (response.IsSuccessStatusCode)
             {
                 TempData["AlertMessage"] = "Country Deleted Successfully";
             }
             return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region Ajax CRUD
+        public async Task<IActionResult> AjaxCrud()
+        {
+            return View();
+        }
+
+        public IEnumerable<CountryModel> GetCountries()
+        {
+            List<CountryModel> countries = new List<CountryModel>();
+            HttpResponseMessage response = _httpClient.GetAsync($"{_httpClient.BaseAddress}/Country/GetAllCountries").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                string data = response.Content.ReadAsStringAsync().Result;
+                countries = JsonConvert.DeserializeObject<List<CountryModel>>(data);
+            }
+            return countries;
+        }
+
+        /*[HttpPost]
+        public async Task<JsonResult> SaveCountry([FromBody] CountryModel country)
+        {
+            HttpResponseMessage response;
+
+            if (country.CountryID > 0)
+            {
+                var jsonContent = JsonConvert.SerializeObject(country);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                response = await _httpClient.PutAsync($"{_httpClient.BaseAddress}/Country/UpdateCountry/{country.CountryID}", content);
+            }
+            else
+            {
+                var jsonContent = JsonConvert.SerializeObject(country);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                response = await _httpClient.PostAsync($"{_httpClient.BaseAddress}/Country/InsertCountry", content);
+            }
+
+            return Json(response.IsSuccessStatusCode);
+        }*/
+
+        [HttpPost]
+        public async Task<JsonResult> SaveCountry([FromBody] CountryModel country)
+        {
+            HttpResponseMessage response;
+            string message;
+
+            try
+            {
+                if (country.CountryID > 0)
+                {
+                    var jsonContent = JsonConvert.SerializeObject(country);
+                    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                    response = await _httpClient.PutAsync($"{_httpClient.BaseAddress}/Country/UpdateCountry/{country.CountryID}", content);
+                    message = response.IsSuccessStatusCode ? "Country updated successfully!" : $"Failed to update country. Response: {await response.Content.ReadAsStringAsync()}";
+                }
+                else
+                {
+                    var jsonContent = JsonConvert.SerializeObject(country);
+                    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                    response = await _httpClient.PostAsync($"{_httpClient.BaseAddress}/Country/InsertCountry", content);
+                    message = response.IsSuccessStatusCode ? "Country added successfully!" : $"Failed to add country. Response: {await response.Content.ReadAsStringAsync()}";
+                }
+            }
+            catch (Exception ex)
+            {
+                message = $"An error occurred: {ex.Message}";
+                return Json(new { success = false, message });
+            }
+
+            return Json(new { success = response.IsSuccessStatusCode, message });
+        }
+
+        [HttpDelete]
+        public async Task<JsonResult> DeleteCountry(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"{_httpClient.BaseAddress}/Country/DeleteCountry/{id}");
+            return Json(response.IsSuccessStatusCode);
         }
         #endregion
     }

@@ -18,7 +18,7 @@ namespace CoffeeShopManagementSystem.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View("Index","Dashboard");
         }
 
         public IActionResult Privacy()
@@ -26,6 +26,15 @@ namespace CoffeeShopManagementSystem.Controllers
             return View();
         }
 
+        public IActionResult Error()
+        {
+            return View("Error", "Something went wrong. Please try again.");
+        }
+
+        public IActionResult TestError()
+        {
+            throw new Exception("This is a test exception!");
+        }
 
         #region UserProfileData
         public IActionResult UserProfile(int UserID)

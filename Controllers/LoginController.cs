@@ -42,7 +42,7 @@ namespace CoffeeShopManagementSystem.Controllers
                         HttpContext.Session.SetString("UserID", dr["UserID"].ToString());
                         HttpContext.Session.SetString("UserName", dr["UserName"].ToString());
                     }
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Dashboard");
                 }
             }
             catch (Exception e)
